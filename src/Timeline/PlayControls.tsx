@@ -4,17 +4,20 @@ import React, { useState, useCallback, useEffect } from "react";
 type PlayControlsProps = {
   time: number;
   setTime: (time: number) => void;
+  maxTime: number;
+  setMaxTime: (maxTime: number) => void;
 };
 
 
 
-export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
+export const PlayControls = ({ time, setTime, maxTime, setMaxTime }: PlayControlsProps) => {
   const [tmpTime, setTmpTime] = useState<any>(null);
+  const [tmpMaxTime, setMaxTmpTime] = useState<any>(null);
   const [toBlur, setToBlur] = useState<any>(null);
 
-  const validateTime = (n: number, max: number) => {
+  const validateTime = (n: number) => {
     let num: number = Number(n);
-    let mx: number = Number(max);
+    let mx: number = Number(maxTime);
     num = num > mx ? mx : num;
     num = num < 0 ? 0 : num;
     /* so there's 2 conflicting requirements here:
@@ -30,7 +33,18 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
 
   const onTimeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTmpTime(e.target.value);
+    const t = e.target as HTMLInputElement;
+      if(false){
+      setMaxTime(2000);
+      }
+      if(t?.dataset?.testid){
+        if(t.dataset.testid === "current-time-input"){
+          setTmpTime(e.target.value);
+        }
+        else if(t.dataset.testid === "duration-input"){
+          setMaxTmpTime(e.target.value);
+        }
+      }
     },
     [setTmpTime],
   );
@@ -39,11 +53,20 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if(e.key === "Enter"){
         const t = e.target as HTMLInputElement;
-        if(tmpTime !== ""){
-          setTime(validateTime(Number(t.value || tmpTime), Number(t?.max)));
+        if(t.dataset.testid === "current-time-input"){
+          if(tmpTime !== ""){
+            setTime(validateTime(Number(t.value || tmpTime)));
+          }
+          setToBlur({"obj": t, "key": e.key});
+          setTmpTime(null);
         }
-        setToBlur({"obj": t, "key": e.key});
-        setTmpTime(null);
+        else if(t.dataset.testid === "duration-input"){
+          if(tmpMaxTime !== ""){
+            setMaxTime(Number(tmpMaxTime));
+          }
+          setToBlur({"obj": t, "key": e.key});
+          setMaxTmpTime(null);
+        }
       }
     },
     [tmpTime, setToBlur, setTmpTime, validateTime],
@@ -65,7 +88,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     (e: React.FocusEvent<HTMLInputElement>) => {
       const t = e.target as HTMLInputElement;
       if(tmpTime !== "" ){
-        setTime(validateTime(Number(t.value || tmpTime), Number(t?.max)));
+        setTime(validateTime(Number(t.value || tmpTime)));
       }
       setTmpTime(null);
     },
@@ -108,11 +131,17 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     if(!toBlur){
     return;
     }
-    if(toBlur !== null && tmpTime === null){
+    if(toBlur !== null && (tmpTime === null || tmpMaxTime === null)){
     toBlur.obj.blur();
     setToBlur(null);
     }
-  }, [tmpTime, toBlur]);
+  }, [tmpTime, tmpMaxTime, toBlur]);
+
+  useEffect(() => {
+    if(maxTime && maxTime < time){
+    setTime(maxTime);
+    }
+  } ,[maxTime]);
 
   return (
     <div
@@ -146,9 +175,13 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
           type="number"
           data-testid="duration-input"
           min={100}
-          max={2000}
+          max={6000}
           step={10}
-          defaultValue={2000}
+          onChange={onTimeChange}
+          onKeyPress={onKeyPressTime}
+          value={tmpMaxTime !== null ? Number(tmpMaxTime).toString() : maxTime.toString()}
+          onMouseUp={onMouseTime}
+          ref={onRefTime}
         />
         Duration
       </fieldset>
