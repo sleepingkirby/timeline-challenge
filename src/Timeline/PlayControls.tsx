@@ -1,12 +1,15 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback } from "react";
+
 
 type PlayControlsProps = {
   time: number;
   setTime: (time: number) => void;
 };
 
+
+
 export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
-  // TODO: implement time <= maxTime
+  const [tmpTime, setTmpTime] = useState<any>(null);
 
   const validateTime = (n: number, max: number) => {
     let num: number = Number(n);
@@ -19,7 +22,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
 
   const onTimeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTime(Number(e.target.value));
+      setTmpTime(Number(e.target.value));
     },
     [setTime],
   );
@@ -28,20 +31,62 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if(e.key === "Enter"){
       const t = e.target as HTMLInputElement;
-      setTime(validateTime(time, Number(t?.max)));
+      setTime(validateTime(Number(tmpTime), Number(t?.max)));
+      setTmpTime(null);
       }
     },
     [time, setTime, validateTime],
   );
 
+  const onKeyDownTime = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if(e.key === "Escape"){
+      setTmpTime(null);
+      }
+    },
+    [],
+  );
+
   const onBlurTime = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
       const t = e.target as HTMLInputElement;
-      setTime(validateTime(time, Number(t?.max)));
+      setTime(validateTime(Number(tmpTime), Number(t?.max)));
+      setTmpTime(null);  
     },
     [time, setTime, validateTime],
   );
 
+  const onFocusTime = useCallback(
+    (e: React.FocusEvent<HTMLInputElement>) => {
+      const t = e.target as HTMLInputElement;
+      t.select();
+    },
+    [],
+  );
+
+  const onMouseTime = useCallback(
+    (e: React.MouseEvent<HTMLInputElement>) => {
+      const t = e.target as HTMLInputElement;
+      t.select();
+    },
+    [],
+  );
+
+  //I can't beleive this is still a problem >>> https://github.com/facebook/react/issues/3964
+  //this calls AFTER onChange event.
+  const onRefTime = useCallback(
+    (element: HTMLInputElement | null) => {
+      if (element) {
+        element.onchange = (e) => {
+          if(e.target){
+            const t = e.target as HTMLInputElement;
+            t.select();
+          }
+        } 
+      }
+    },
+    []
+  );
 
   return (
     <div
@@ -58,10 +103,14 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
           min={0}
           max={2000}
           step={10}
-          value={time}
+          value={tmpTime !== null ? tmpTime : time}
           onChange={onTimeChange}
           onKeyPress={onValidateTime}
+          onKeyDown={onKeyDownTime}
           onBlur={onBlurTime}
+          onFocus={onFocusTime}
+          onMouseUp={onMouseTime}
+          ref={onRefTime}
         />
       </fieldset>
       -
