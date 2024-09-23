@@ -17,7 +17,14 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     let mx: number = Number(max);
     num = num > mx ? mx : num;
     num = num < 0 ? 0 : num;
-    num = Math.round(num);
+    /* so there's 2 conflicting requirements here:
+    - Decimal values are automatically rounded to the nearest integer
+    - Current Time and Duration are always multiples of 10ms
+    The first would mean that 15.6 rounds up to 16
+    The second would mean that 15.6 rounds up to 20
+    I'm making my best guess here as I have 2 other interviews to do and don't have time to wait for an answer.
+    */
+    num = Math.round( Math.round(num) / 10) * 10;
     return num;
   } 
 
