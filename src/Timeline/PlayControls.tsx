@@ -86,7 +86,12 @@ export const PlayControls = ({ time, setTime, maxTime, setMaxTime }: PlayControl
       const t = e.target as HTMLInputElement;
       if(e.key === "Escape"){
         setToBlur({"obj": t, "key": e.key});
+        if(t.dataset.testid === "current-time-input"){
         setTmpTime(null);
+        }
+        else if(t.dataset.testid === "duration-input"){
+        setMaxTmpTime(null);
+        }
       }
     },
     [setToBlur, setTmpTime],
@@ -95,10 +100,18 @@ export const PlayControls = ({ time, setTime, maxTime, setMaxTime }: PlayControl
   const onBlurTime = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
       const t = e.target as HTMLInputElement;
-      if(tmpTime !== "" ){
-        setTime(validateTime(Number(t.value || tmpTime)));
+      if(t.dataset.testid === "current-time-input"){
+        if(tmpTime !== "" ){
+          setTime(validateTime(Number(t.value || tmpTime)));
+        }
+        setTmpTime(null);
       }
-      setTmpTime(null);
+      else if(t.dataset.testid === "duration-input"){
+        if(tmpMaxTime !== "" ){
+          setMaxTime(validateMaxTime(Number(t.value || tmpMaxTime), t));
+        }
+        setMaxTmpTime(null);
+      }
     },
     [time, setTime, tmpTime, setTmpTime, validateTime],
   );
@@ -185,9 +198,12 @@ export const PlayControls = ({ time, setTime, maxTime, setMaxTime }: PlayControl
           min={100}
           max={6000}
           step={10}
-          onChange={onTimeChange}
-          onKeyPress={onKeyPressTime}
           value={tmpMaxTime !== null ? Number(tmpMaxTime).toString() : maxTime.toString()}
+          onChange={onTimeChange}
+          onKeyDown={onKeyDownTime}
+          onKeyPress={onKeyPressTime}
+          onBlur={onBlurTime}
+          onFocus={onFocusTime}
           onMouseUp={onMouseTime}
           ref={onRefTime}
         />
