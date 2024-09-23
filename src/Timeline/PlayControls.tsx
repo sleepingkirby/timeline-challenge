@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 
 
 type PlayControlsProps = {
@@ -10,7 +10,7 @@ type PlayControlsProps = {
 
 export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
   const [tmpTime, setTmpTime] = useState<any>(null);
-  const [tmpStr, setTmpStr] = useState<string>("");
+  const [toBlur, setToBlur] = useState<any>(null);
 
   const validateTime = (n: number, max: number) => {
     let num: number = Number(n);
@@ -23,43 +23,49 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
 
   const onTimeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      console.log("onchange value:", e.target.value);
-      setTmpTime(Number(e.target.value));
-      setTmpStr(e.target.value);
+      console.log(e.target.value);
+      setTmpTime(e.target.value);
     },
-    [setTime],
+    [setTmpTime],
   );
 
-  const onValidateTime = useCallback(
+  const onKeyPressTime = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if(e.key === "Enter"){
-      const t = e.target as HTMLInputElement;
-      t.blur();
+        const t = e.target as HTMLInputElement;
+        if(tmpTime !== ""){
+          setTime(validateTime(Number(t.value || tmpTime), Number(t?.max)));
+        }
+        setToBlur({"obj": t, "key": e.key});
+        setTmpTime(null);
       }
     },
-    [time, setTime, validateTime],
+    [tmpTime, setToBlur, setTmpTime, validateTime],
   );
+
 
   const onKeyDownTime = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const t = e.target as HTMLInputElement;
       if(e.key === "Escape"){
-      setTmpTime(null);
-      setTmpStr("");
+      console.log("<<<<onkeyDown", time, tmpTime, t.value);
+        setToBlur({"obj": t, "key": e.key});
+        setTmpTime(null);
       }
     },
-    [],
+    [setToBlur, setTmpTime],
   );
 
   const onBlurTime = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
       const t = e.target as HTMLInputElement;
-      if(tmpStr !== ""){
+      console.log("<<<<onblur", time, tmpTime, t.value);
+      if(tmpTime !== "" ){
         setTime(validateTime(Number(t.value || tmpTime), Number(t?.max)));
       }
       setTmpTime(null);
-      setTmpStr("");
     },
-    [time, setTime, validateTime],
+    [time, setTime, tmpTime, setTmpTime, validateTime],
   );
 
   const onFocusTime = useCallback(
@@ -94,6 +100,17 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     []
   );
 
+  useEffect(() => {
+    if(!toBlur){
+    return;
+    }
+    if(toBlur !== null && tmpTime === null){
+    console.log("use effect:");
+    toBlur.obj.blur();
+    setToBlur(null);
+    }
+  }, [tmpTime, toBlur]);
+
   return (
     <div
       className="flex items-center justify-between border-b border-r border-solid border-gray-700 
@@ -109,9 +126,9 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
           min={0}
           max={2000}
           step={10}
-          value={tmpTime !== null ? tmpTime : time.toString()}
+          value={tmpTime !== null ? Number(tmpTime).toString() : time.toString()}
           onChange={onTimeChange}
-          onKeyPress={onValidateTime}
+          onKeyPress={onKeyPressTime}
           onKeyDown={onKeyDownTime}
           onBlur={onBlurTime}
           onFocus={onFocusTime}
