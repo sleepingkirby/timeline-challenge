@@ -16,8 +16,8 @@ export const Timeline = () => {
     bg-gray-800 border-t-2 border-solid border-gray-700"
       data-testid="timeline"
     >
-      <PlayControls time={time} setTime={setTime} maxTime={maxTime} setMaxTime={setMaxTime}/>
-      <Ruler />
+      <PlayControls time={time} setTime={setTime} maxTime={maxTime} setMaxTime={setMaxTime} />
+      <Ruler time={time} setTime={setTime} />
       <TrackList />
       <KeyframeList />
       <Playhead time={time} />
