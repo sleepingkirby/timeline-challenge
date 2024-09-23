@@ -17,7 +17,7 @@ export const PlayControls = ({ time, setTime, maxTime, setMaxTime }: PlayControl
 
   const validateTime = (n: number) => {
     let num: number = Number(n);
-    let mx: number = Number(maxTime);
+    const mx: number = Number(maxTime);
     num = num > mx ? mx : num;
     num = num < 0 ? 0 : num;
     /* so there's 2 conflicting requirements here:
@@ -31,12 +31,20 @@ export const PlayControls = ({ time, setTime, maxTime, setMaxTime }: PlayControl
     return num;
   } 
 
+  const validateMaxTime = (n: number, t:HTMLInputElement) => {
+    let num: number = Number(n);
+    const max = Number(t.max);
+    const min = Number(t.min);
+    num = num > max ? max : num;
+    num = num < min ? min : num;
+    num = Math.round( Math.round(num) / 10) * 10;
+    return num;
+  }
+
+
   const onTimeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
     const t = e.target as HTMLInputElement;
-      if(false){
-      setMaxTime(2000);
-      }
       if(t?.dataset?.testid){
         if(t.dataset.testid === "current-time-input"){
           setTmpTime(e.target.value);
@@ -62,7 +70,7 @@ export const PlayControls = ({ time, setTime, maxTime, setMaxTime }: PlayControl
         }
         else if(t.dataset.testid === "duration-input"){
           if(tmpMaxTime !== ""){
-            setMaxTime(Number(tmpMaxTime));
+            setMaxTime(validateMaxTime(Number(tmpMaxTime), t));
           }
           setToBlur({"obj": t, "key": e.key});
           setMaxTmpTime(null);
