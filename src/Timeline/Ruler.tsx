@@ -3,9 +3,10 @@ import React, { useCallback } from "react";
 type PlayControlsProps = {
   time: number;
   setTime: (time: number) => void;
+  maxTime: number;
 };
 
-export const Ruler = ({ time, setTime }: PlayControlsProps) => {
+export const Ruler = ({ time, setTime, maxTime }: PlayControlsProps) => {
   // TODO: implement mousedown and mousemove to update time and Playhead position
 
   const onDragRuler = useCallback(
@@ -23,6 +24,7 @@ export const Ruler = ({ time, setTime }: PlayControlsProps) => {
     (e: React.MouseEvent<HTMLDivElement>) => {
       const t = e.target as  HTMLDivElement;
       setTime(Number(e.clientX - t.offsetLeft));
+      console.log(maxTime);
     }, 
     [setTime],
   );
@@ -35,10 +37,11 @@ export const Ruler = ({ time, setTime }: PlayControlsProps) => {
       data-testid="ruler"
     >
       <div
-        className="w-[2000px] h-6 rounded-md bg-white/25"
+        className={`w-[2000px] h-6 rounded-md bg-white/25`}
         data-testid="ruler-bar"
         onMouseMove={onDragRuler}
-        onMouseDown={onClickRuler} 
+        onMouseDown={onClickRuler}
+        style={{ width: `${maxTime}px`}}
       />
     </div>
   );

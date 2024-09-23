@@ -17,9 +17,9 @@ export const Timeline = () => {
       data-testid="timeline"
     >
       <PlayControls time={time} setTime={setTime} maxTime={maxTime} setMaxTime={setMaxTime} />
-      <Ruler time={time} setTime={setTime} />
+      <Ruler time={time} setTime={setTime} maxTime={maxTime} />
       <TrackList />
-      <KeyframeList />
+      <KeyframeList maxTime={maxTime} />
       <Playhead time={time} />
     </div>
   );
