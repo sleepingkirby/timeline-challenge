@@ -9,6 +9,8 @@ export const Timeline = () => {
   // FIXME: performance concerned
   const [time, setTime] = useState(0);
   const [maxTime, setMaxTime] = useState(2000);
+  const [scrollTimeRuler, setScrollTimeRuler] = useState(0);
+  const [scrollTimeKF, setScrollTimeKF] = useState(0);
 
   return (
     <div
@@ -17,9 +19,9 @@ export const Timeline = () => {
       data-testid="timeline"
     >
       <PlayControls time={time} setTime={setTime} maxTime={maxTime} setMaxTime={setMaxTime} />
-      <Ruler time={time} setTime={setTime} maxTime={maxTime} />
+      <Ruler time={time} setTime={setTime} maxTime={maxTime} scrollTimeKF={scrollTimeKF} setScrollTimeRuler={setScrollTimeRuler}/>
       <TrackList />
-      <KeyframeList maxTime={maxTime} />
+      <KeyframeList scrollTimeRuler={scrollTimeRuler} setScrollTimeKF={setScrollTimeKF} maxTime={maxTime} />
       <Playhead time={time} />
     </div>
   );
