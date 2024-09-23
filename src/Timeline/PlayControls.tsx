@@ -13,6 +13,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     let mx: number = Number(max);
     num = num > mx ? mx : num;
     num = num < 0 ? 0 : num;
+    num = Math.round(Math.round(num) / 10) * 10;
     return num;
   } 
 
@@ -35,7 +36,6 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
 
   const onBlurTime = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
-      console.log(e);
       const t = e.target as HTMLInputElement;
       setTime(validateTime(time, Number(t?.max)));
     },
