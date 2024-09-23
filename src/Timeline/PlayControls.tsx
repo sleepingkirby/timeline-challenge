@@ -23,7 +23,6 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
 
   const onTimeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(e.target.value);
       setTmpTime(e.target.value);
     },
     [setTmpTime],
@@ -48,7 +47,6 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       const t = e.target as HTMLInputElement;
       if(e.key === "Escape"){
-      console.log("<<<<onkeyDown", time, tmpTime, t.value);
         setToBlur({"obj": t, "key": e.key});
         setTmpTime(null);
       }
@@ -59,7 +57,6 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
   const onBlurTime = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
       const t = e.target as HTMLInputElement;
-      console.log("<<<<onblur", time, tmpTime, t.value);
       if(tmpTime !== "" ){
         setTime(validateTime(Number(t.value || tmpTime), Number(t?.max)));
       }
@@ -105,7 +102,6 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     return;
     }
     if(toBlur !== null && tmpTime === null){
-    console.log("use effect:");
     toBlur.obj.blur();
     setToBlur(null);
     }
