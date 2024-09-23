@@ -10,21 +10,21 @@ export const Ruler = ({ time, setTime }: PlayControlsProps) => {
 
   const onDragRuler = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
-      if(false){
-      setTime(100);
+      if(e.buttons === 1 && e.button === 0){
+        const t = e.target as  HTMLDivElement;
+        setTime(Number(e.clientX - t.offsetLeft));
       }
-      console.log("time: ", time);
-      console.log(e);
     },
-    [time],
+    [time, setTime],
   );
 
 
   const onClickRuler = useCallback(
-    (e: React.MouseEvent<HTMLInputElement>) => {
-      console.log(e);
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const t = e.target as  HTMLDivElement;
+      setTime(Number(e.clientX - t.offsetLeft));
     }, 
-    [],
+    [setTime],
   );
 
   return (
@@ -37,8 +37,8 @@ export const Ruler = ({ time, setTime }: PlayControlsProps) => {
       <div
         className="w-[2000px] h-6 rounded-md bg-white/25"
         data-testid="ruler-bar"
-        onDrag={onDragRuler}
-        onClick={onClickRuler} 
+        onMouseMove={onDragRuler}
+        onMouseDown={onClickRuler} 
       />
     </div>
   );
