@@ -10,19 +10,22 @@ type PlayControlsProps = {
 
 export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
   const [tmpTime, setTmpTime] = useState<any>(null);
+  const [tmpStr, setTmpStr] = useState<string>("");
 
   const validateTime = (n: number, max: number) => {
     let num: number = Number(n);
     let mx: number = Number(max);
     num = num > mx ? mx : num;
     num = num < 0 ? 0 : num;
-    num = Math.round(Math.round(num) / 10) * 10;
+    num = Math.round(num);
     return num;
   } 
 
   const onTimeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
+      console.log("onchange value:", e.target.value);
       setTmpTime(Number(e.target.value));
+      setTmpStr(e.target.value);
     },
     [setTime],
   );
@@ -31,8 +34,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if(e.key === "Enter"){
       const t = e.target as HTMLInputElement;
-      setTime(validateTime(Number(tmpTime), Number(t?.max)));
-      setTmpTime(null);
+      t.blur();
       }
     },
     [time, setTime, validateTime],
@@ -42,6 +44,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if(e.key === "Escape"){
       setTmpTime(null);
+      setTmpStr("");
       }
     },
     [],
@@ -50,8 +53,11 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
   const onBlurTime = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
       const t = e.target as HTMLInputElement;
-      setTime(validateTime(Number(tmpTime), Number(t?.max)));
-      setTmpTime(null);  
+      if(tmpStr !== ""){
+        setTime(validateTime(Number(t.value || tmpTime), Number(t?.max)));
+      }
+      setTmpTime(null);
+      setTmpStr("");
     },
     [time, setTime, validateTime],
   );
@@ -103,7 +109,7 @@ export const PlayControls = ({ time, setTime }: PlayControlsProps) => {
           min={0}
           max={2000}
           step={10}
-          value={tmpTime !== null ? tmpTime : time}
+          value={tmpTime !== null ? tmpTime : time.toString()}
           onChange={onTimeChange}
           onKeyPress={onValidateTime}
           onKeyDown={onKeyDownTime}
