@@ -14,7 +14,7 @@ export const Ruler = ({ time, setTime, maxTime, scrollTimeKF, setScrollTimeRuler
     (e: React.DragEvent<HTMLDivElement>) => {
       if(e.buttons === 1 && e.button === 0){
         const t = e.target as  HTMLDivElement;
-        setTime(Number(e.clientX - t.offsetLeft));
+        setTime(Number(e.clientX - t.offsetLeft + scrollTimeKF));
       }
     },
     [time, setTime],
@@ -23,11 +23,11 @@ export const Ruler = ({ time, setTime, maxTime, scrollTimeKF, setScrollTimeRuler
 
   const onClickRuler = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      const t = e.target as  HTMLDivElement;
-      setTime(Number(e.clientX - t.offsetLeft));
-      console.log(maxTime);
+      const t = e.target as HTMLDivElement;
+      console.log("<<<<onClickRUler: ", e.clientX, t.offsetLeft, scrollTimeKF);
+      setTime(Number(e.clientX - t.offsetLeft + scrollTimeKF));
     }, 
-    [setTime],
+    [setTime, scrollTimeKF],
   );
 
   const onScrollRuler = useCallback(
