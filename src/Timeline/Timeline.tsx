@@ -25,7 +25,7 @@ export const Timeline = () => {
       <Ruler time={time} setTime={setTime} maxTime={maxTime} scrollTimeKF={scrollTimeKF} setScrollTimeRuler={setScrollTimeRuler}/>
       <TrackList scrollTrackKF={scrollTrackKF} setScrollTrackKF={setScrollTrackKF} setScrollTrackTL={setScrollTrackTL}/>
       <KeyframeList scrollTimeRuler={scrollTimeRuler} setScrollTimeKF={setScrollTimeKF} scrollTrackTL={scrollTrackTL} setScrollTrackKF={setScrollTrackKF} maxTime={maxTime} />
-      <Playhead time={time} scrollTimeRuler={scrollTimeRuler}/>
+      <Playhead time={time} scrollTimeRuler={scrollTimeRuler} leftLimit={300}/>
     </div>
   );
 };

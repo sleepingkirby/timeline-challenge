@@ -24,7 +24,6 @@ export const Ruler = ({ time, setTime, maxTime, scrollTimeKF, setScrollTimeRuler
   const onClickRuler = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const t = e.target as HTMLDivElement;
-      console.log("<<<<onClickRUler: ", e.clientX, t.offsetLeft, scrollTimeKF);
       setTime(Number(e.clientX - t.offsetLeft + scrollTimeKF));
     }, 
     [setTime, scrollTimeKF],
