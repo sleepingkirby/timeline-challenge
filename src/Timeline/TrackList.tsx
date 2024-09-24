@@ -1,5 +1,35 @@
-export const TrackList = () => {
+import React, { useCallback, useEffect } from "react";
+
+type PlayControlsProps = {
+  scrollTrackKF: number;
+  setScrollTrackKF: (scrollTrackKF: number) => void;
+  setScrollTrackTL: (scrollTrackTL: number) => void;
+};
+
+export const TrackList = ({ scrollTrackKF, setScrollTrackKF, setScrollTrackTL}: PlayControlsProps) => {
   // TODO: implement scroll sync with `KeyframeList`
+
+  const onScroll = useCallback(
+    () => {
+      if(scrollRef?.current){
+        setScrollTrackTL(scrollRef.current.scrollTop);
+      }
+    },
+    [setScrollTrackKF, setScrollTrackTL],
+  );
+
+
+  const scrollRef = React.useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+      if(scrollRef?.current){
+        scrollRef.current.scrollTop = scrollTrackKF;
+        setScrollTrackTL(scrollTrackKF);
+      }
+    },
+    [scrollTrackKF],
+  );
+
 
   return (
     <div
@@ -7,6 +37,8 @@ export const TrackList = () => {
       border-r border-solid border-r-gray-700 
       overflow-auto"
       data-testid="track-list"
+      onScroll={onScroll}
+      ref={scrollRef}
     >
       <div className="p-2">
         <div>Track A</div>
