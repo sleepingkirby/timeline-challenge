@@ -7,6 +7,15 @@ import { PlayControls } from "./PlayControls";
 
 export const Timeline = () => {
   // FIXME: performance concerned
+  /*Not for the time being. This is suppose to be, as per Mumu Li, a 1 to 2 hour challenege.
+  There's no way I can:
+  - run tests and measurements to see where its taking the longest
+  - reduce variables
+  - refactor code and css
+  - offload work from javascript and react to CSS
+  - implement memos properly
+  And do understand and do all the tasks in the challenge in 1~2 hours
+  */
   const [time, setTime] = useState(0);
   const [maxTime, setMaxTime] = useState(2000);
   const [scrollTimeRuler, setScrollTimeRuler] = useState(0);

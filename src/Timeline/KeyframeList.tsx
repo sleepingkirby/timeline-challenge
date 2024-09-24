@@ -11,7 +11,6 @@ type PlayControlsProps = {
 
 
 export const KeyframeList = ({ scrollTimeRuler, setScrollTimeKF, scrollTrackTL, setScrollTrackKF, maxTime }: PlayControlsProps) => {
-  // TODO: implement scroll sync with `Ruler` and `TrackList`
 
   const onScroll = useCallback(
     () => {
@@ -33,6 +32,8 @@ export const KeyframeList = ({ scrollTimeRuler, setScrollTimeKF, scrollTrackTL, 
     },
     [scrollTimeRuler, scrollTrackTL],
   );
+
+  //I would like to note that if these segments were at 100% width and is limited by outher div for its width, there would be no need to pass in maxTime at all. Thus saving veriable setting. passing and re-rendering
 
   return (
     <div

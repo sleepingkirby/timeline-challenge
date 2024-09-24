@@ -5,7 +5,7 @@ type PlayheadProps = {
 };
 
 export const Playhead = ({ time, leftLimit, scrollTimeRuler }: PlayheadProps) => {
-  //No need for right hiding as it exits the viewport anyways
+  //No need for playhead right hiding as it exits the viewport anyways
   //I should also note that, if these elements were done via flexboxes and not grid, we can hide via css rather than via javascript/react
   return (
     <div

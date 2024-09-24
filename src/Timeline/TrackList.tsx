@@ -7,7 +7,6 @@ type PlayControlsProps = {
 };
 
 export const TrackList = ({ scrollTrackKF, setScrollTrackKF, setScrollTrackTL}: PlayControlsProps) => {
-  // TODO: implement scroll sync with `KeyframeList`
 
   const onScroll = useCallback(
     () => {

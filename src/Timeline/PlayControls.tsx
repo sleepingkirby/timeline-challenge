@@ -87,10 +87,10 @@ export const PlayControls = ({ time, setTime, maxTime, setMaxTime }: PlayControl
       if(e.key === "Escape"){
         setToBlur({"obj": t, "key": e.key});
         if(t.dataset.testid === "current-time-input"){
-        setTmpTime(null);
+          setTmpTime(null);
         }
         else if(t.dataset.testid === "duration-input"){
-        setMaxTmpTime(null);
+          setMaxTmpTime(null);
         }
       }
     },
@@ -150,17 +150,17 @@ export const PlayControls = ({ time, setTime, maxTime, setMaxTime }: PlayControl
 
   useEffect(() => {
     if(!toBlur){
-    return;
+      return;
     }
     if(toBlur !== null && (tmpTime === null || tmpMaxTime === null)){
-    toBlur.obj.blur();
-    setToBlur(null);
+      toBlur.obj.blur();
+      setToBlur(null);
     }
   }, [tmpTime, tmpMaxTime, toBlur]);
 
   useEffect(() => {
     if(maxTime && maxTime < time){
-    setTime(maxTime);
+      setTime(maxTime);
     }
   } ,[maxTime]);
 
