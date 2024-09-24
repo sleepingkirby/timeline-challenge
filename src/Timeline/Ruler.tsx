@@ -49,6 +49,7 @@ export const Ruler = ({ time, setTime, maxTime, scrollTimeKF, setScrollTimeRuler
     [scrollTimeKF],
   );
 
+  //why is width set to maxTime + 1? Because counting. The first pixel is 0ms and hence, the 100th pixel is 99ms.
   return (
     <div
       className="px-4 py-2 min-w-0 
@@ -63,7 +64,7 @@ export const Ruler = ({ time, setTime, maxTime, scrollTimeKF, setScrollTimeRuler
         data-testid="ruler-bar"
         onMouseMove={onDragRuler}
         onMouseDown={onClickRuler}
-        style={{ width: `${maxTime}px`}}
+        style={{ width: `${maxTime + 1}px`}}
       />
     </div>
   );
